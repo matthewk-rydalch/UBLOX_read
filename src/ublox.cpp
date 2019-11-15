@@ -28,7 +28,6 @@ UBLOX::UBLOX(const std::string& port) :
     ubx_.configure(CFG_VALSET_t::VERSION_0, CFG_VALSET_t::RAM, 0, CFG_VALSET_t::MSGOUT_SFRBX, byte);
     //configuring SVIN messages is done in config_base_stationary()
 
-
     auto eph_cb = [this](uint8_t cls, uint8_t type, const ublox::UBX_message_t& in_msg)
     {
       this->nav_.convertUBX(in_msg.RXM_SFRBX);
@@ -151,7 +150,7 @@ void UBLOX::initRover(std::string local_host, uint16_t local_port,
 
     if (!udp_->init())
         throw std::runtime_error("Failed to initialize Rover receive UDP");
-
+  
     config_rover();
     config_f9p();
 }

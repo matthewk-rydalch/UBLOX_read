@@ -67,7 +67,6 @@ public:
     void serial_read_cb(const uint8_t* buf, size_t size);
     void udp_read_cb(const uint8_t *buf, size_t size);
     void rtcm_complete_cb(const uint8_t* buf, size_t size);
-
     void config_f9p();
     void config_rover();
     void config_base();

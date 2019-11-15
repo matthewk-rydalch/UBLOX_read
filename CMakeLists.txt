@@ -15,8 +15,7 @@ add_library(UBLOX
     src/ublox.cpp
     src/parsers/ubx.cpp
     src/parsers/rtcm.cpp
-    src/parsers/nav.cpp
-    src/utctime.cpp
+    src/parsers/nmea.cpp
 )
 target_link_libraries(UBLOX ${async_comm_LIBRARIES} ${gnss_utils_LIBRARIES})
 target_include_directories(UBLOX PUBLIC include ${async_comm_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIRS})

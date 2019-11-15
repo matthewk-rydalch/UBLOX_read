@@ -68,7 +68,6 @@ UBLOX_ROS::UBLOX_ROS() :
     {
         ublox_->initLogFile(log_filename);
         //ublox_->readFile(log_filename);
-
     }
 }
 

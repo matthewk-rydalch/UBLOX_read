@@ -420,7 +420,6 @@ typedef struct {
     };
 
     enum {
-
         DYNMODEL = 0x20110021, //Dynamic platform model
         DYNMODE_PORTABLE = 0,
         DYNMODE_STATIONARY = 2,
@@ -474,7 +473,7 @@ typedef struct {
     uint8_t layer;
     uint8_t reserved1[2];
     uint32_t cfgDataKey;
-
+  
     union 
     {
         uint8_t bytes[4];

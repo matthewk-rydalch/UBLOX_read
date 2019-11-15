@@ -57,7 +57,6 @@ void relposned_callback(uint8_t cls, uint8_t type, const ublox::UBX_message_t& i
 int main(int argc, char** argv)
 {
     // Create a UBLOX instance
-
     std::string port = "/dev/ttyACM1";
     if(argc > 1)
         port = argv[1];

@@ -1,5 +1,4 @@
 #include <signal.h>
-
 #include <UBLOX/ublox.h>
 
 int i = 1;

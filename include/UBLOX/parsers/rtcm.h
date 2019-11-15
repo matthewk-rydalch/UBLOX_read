@@ -3,7 +3,6 @@
 
 #include <stdio.h>
 #include <stdint.h>
-
 #include "async_comm/comm.h"
 
 class RTCM
@@ -13,7 +12,6 @@ public:
     RTCM();
     uint8_t in_buffer_[BUFFER_SIZE];
     uint32_t canary_ = 0xCAFEBABE;
-
 
     bool read_cb(uint8_t byte);
     bool parsing_message();
@@ -55,7 +53,5 @@ public:
     std::vector<rtcm_cb> callbacks_;
     void registerCallback(rtcm_cb cb);
 };
-
-
 
 #endif

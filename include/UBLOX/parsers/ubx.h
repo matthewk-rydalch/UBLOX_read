@@ -16,6 +16,7 @@ public:
 
     UBX(async_comm::Serial& ser);
 
+
     void configure(uint8_t version, uint8_t layer, uint64_t cfgData, uint32_t cfgDataKey, uint8_t size);
     void get_configuration(uint8_t version, uint8_t layer, uint32_t cfgDataKey);
 
@@ -41,7 +42,7 @@ public:
     bool parsing_message();
 
     size_t num_messages_received();
-
+  
     void set_nav_rate(uint8_t period_ms);
 
     // Send the supplied message
@@ -80,13 +81,13 @@ public:
     uint8_t size;
     uint8_t byte = 1;
     uint8_t word = 2;
+
     // local storage
     volatile bool new_data_;
 
     // Serial Port
     async_comm::Serial& serial_;
 };
-
 }
 #endif // UBX_H
 

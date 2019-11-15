@@ -208,12 +208,6 @@ bool UBX::decode_message()
     return true;
 }
 
-void UBX::registerCallback(uint8_t cls, uint8_t type,
-                std::function<void(uint8_t, uint8_t, const UBX_message_t&)> cb)
-{
-    callbacks.push_back({cls, type, cb});
-}
-
 void UBX::calculate_checksum(const uint8_t msg_cls, const uint8_t msg_id, const uint16_t len, const UBX_message_t payload, uint8_t& ck_a, uint8_t& ck_b) const
 {
     if (msg_cls == 5)
