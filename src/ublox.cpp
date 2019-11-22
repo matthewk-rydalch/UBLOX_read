@@ -91,7 +91,7 @@ void UBLOX::config_base_stationary(int on_off)
     ubx_.configure(CFG_VALSET_t::VERSION_0, CFG_VALSET_t::RAM, 1*on_off, CFG_VALSET_t::MSGOUT_SVIN, byte);
     ubx_.configure(CFG_VALSET_t::VERSION_0, CFG_VALSET_t::RAM, 1*on_off, CFG_VALSET_t::TMODE_MODE, byte);
     ubx_.configure(CFG_VALSET_t::VERSION_0, CFG_VALSET_t::RAM, 500000*on_off, CFG_VALSET_t::TMODE_SVIN_ACC_LIMIT, word);
-    ubx_.configure(CFG_VALSET_t::VERSION_0, CFG_VALSET_t::RAM, 120*on_off, CFG_VALSET_t::TMODE_SVIN_MIN_DUR, word);
+    ubx_.configure(CFG_VALSET_t::VERSION_0, CFG_VALSET_t::RAM, 119*on_off, CFG_VALSET_t::TMODE_SVIN_MIN_DUR, word);
 
 }
 
