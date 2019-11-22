@@ -5,6 +5,7 @@
 		<node name="f9p" pkg="ublox" type="ublox_ros">
 			<param name="serial_port" value="/dev/ttyACM0"/>
 			<param name="rtk_type" value="3"/>
+			<param name="base_type" value="stationary"/>
 			<param name="rover_quantity" value = "2"/>
 			<param name="local_host" value="localhost"/>
 			<param name="local_port" value="16140"/>
@@ -15,10 +16,10 @@
 			<param name="remote_host2" value="localhost"/>
 			<param name="remote_port2" value="16150"/>
 			<!--param name="log_filename" value="../data/devel/base_binary"/-->
-		</node> 
+		</node>
 	</group>
 
-	<group ns="rover">
+	<!--group ns="rover">
 		<node name="f9p" pkg="ublox" type="ublox_ros">
 			<param name="serial_port" value="/dev/ttyACM1"/>
 			<param name="rtk_type" value="2"/>
@@ -26,12 +27,12 @@
 			<param name="local_port" value="16145"/>
 			<param name="remote_host" value="localhost"/>
 			<param name="remote_port" value="16140"/>
-			 <!--param name="log_filename" value="../data/devel/rover1_binary"/-->
-		</node> 
-		<node pkg="rosbag" type="record" name="record" output="screen" args="-O ../data/devel/tworovernew/rover1.bag --all"/>
-	</group>
+			 <!param name="log_filename" value="../data/devel/rover1_binary"/>
+		</node>
+		<!node pkg="rosbag" type="record" name="record" output="screen" args="-O ../data/devel/tworovernew/rover1.bag -a"/>
+	</group-->
 
-	<group ns="rover2">
+	<!--group ns="rover2">
 		<node name="f9p" pkg="ublox" type="ublox_ros">
 			<param name="serial_port" value="/dev/ttyACM2"/>
 			<param name="rtk_type" value="2"/>
@@ -39,8 +40,8 @@
 			<param name="local_port" value="16150"/>
 			<param name="remote_host" value="localhost"/>
 			<param name="remote_port" value="16155"/>
-			<!--param name="log_filename" value="../data/devel/rover2_binary"/-->
-		</node> 
-		<node pkg="rosbag" type="record" name="record" output="screen" args="-O ../data/devel/tworovernew/rover2.bag --all"/>
-	</group>
+			<!param name="log_filename" value="../data/devel/rover2_binary"/>
+		</node>
+		<!node pkg="rosbag" type="record" name="record" output="screen" args="-O ../data/devel/tworovernew/rover2.bag -a"/>
+	</group-->
 </launch>
