@@ -5,6 +5,7 @@
 		<node name="f9p" pkg="ublox" type="ublox_ros">
 			<param name="serial_port" value="/dev/ttyACM0"/>
 			<param name="rtk_type" value="3"/>
+			<param name="base_type" value="stationary"/>
 			<param name="rover_quantity" value = "2"/>
 			<param name="local_host" value="localhost"/>
 			<param name="local_port" value="16140"/>
@@ -28,7 +29,7 @@
 			<param name="remote_port" value="16140"/>
 			 <!--param name="log_filename" value="../data/devel/rover1_binary"/-->
 		</node> 
-		<node pkg="rosbag" type="record" name="record" output="screen" args="-O ../data/devel/tworovernew/rover1.bag --all"/>
+		<!--node pkg="rosbag" type="record" name="record" output="screen" args="-O ../data/devel/tworovernew/rover1.bag -a"/-->
 	</group>
 
 	<group ns="rover2">
@@ -41,6 +42,6 @@
 			<param name="remote_port" value="16155"/>
 			<!--param name="log_filename" value="../data/devel/rover2_binary"/-->
 		</node> 
-		<node pkg="rosbag" type="record" name="record" output="screen" args="-O ../data/devel/tworovernew/rover2.bag --all"/>
+		<!--node pkg="rosbag" type="record" name="record" output="screen" args="-O ../data/devel/tworovernew/rover2.bag -a"/-->
 	</group>
 </launch>
