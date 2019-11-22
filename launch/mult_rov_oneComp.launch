@@ -15,8 +15,13 @@
 			<param name="local_port2" value="16155"/>
 			<param name="remote_host2" value="localhost"/>
 			<param name="remote_port2" value="16150"/>
+<<<<<<< HEAD
 			<!--param name="log_filename" value="../data/devel/base_binary"/-->
 		</node>
+=======
+			<param name="log_filename" value="../data/devel/base_binary"/>
+		</node> 
+>>>>>>> db6ace60f3d257846c9e76272514d7cdfd8372de
 	</group>
 
 	<!--group ns="rover">
@@ -27,10 +32,17 @@
 			<param name="local_port" value="16145"/>
 			<param name="remote_host" value="localhost"/>
 			<param name="remote_port" value="16140"/>
+<<<<<<< HEAD
 			 <!param name="log_filename" value="../data/devel/rover1_binary"/>
 		</node>
 		<!node pkg="rosbag" type="record" name="record" output="screen" args="-O ../data/devel/tworovernew/rover1.bag -a"/>
 	</group-->
+=======
+			 <param name="log_filename" value="../data/devel/rover1_binary"/>
+		</node> 
+		<node pkg="rosbag" type="record" name="record" output="screen" args="-O /home/magicc/data/tworovernew/alldata.bag -a"/>
+	</group>
+>>>>>>> db6ace60f3d257846c9e76272514d7cdfd8372de
 
 	<!--group ns="rover2">
 		<node name="f9p" pkg="ublox" type="ublox_ros">
@@ -40,8 +52,15 @@
 			<param name="local_port" value="16150"/>
 			<param name="remote_host" value="localhost"/>
 			<param name="remote_port" value="16155"/>
+<<<<<<< HEAD
 			<!param name="log_filename" value="../data/devel/rover2_binary"/>
 		</node>
 		<!node pkg="rosbag" type="record" name="record" output="screen" args="-O ../data/devel/tworovernew/rover2.bag -a"/>
 	</group-->
+=======
+			<!--param name="log_filename" value="../data/devel/rover2_binary"/-->
+		</node> 
+		<!--node pkg="rosbag" type="record" name="record" output="screen" args="-O ../data/devel/tworovernew/rover2.bag -a"/-->
+	</group>
+>>>>>>> db6ace60f3d257846c9e76272514d7cdfd8372de
 </launch>
