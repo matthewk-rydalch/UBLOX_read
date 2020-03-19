@@ -2,11 +2,172 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <string>
+#include <map>
 
 namespace ublox
 {
 
 static constexpr size_t BUFFER_SIZE = 1024;
+
+std::map<uint8_t, std::map<uint8_t, std::string>> UBX_msg_map;
+std::map<uint8_t, std::string> ACK_msg_map;
+ACK_msg_map[0x00]="ACK_NACK";
+ACK_msg_map[0x01]="ACK_ACK";
+
+std::map<uint8_t, string NAV_msg_type> NAV_msg_map;
+NAV_msg_map[0x60]="NAV_AOPSTATUS";
+NAV_msg_map[0x05]="NAV_ATT";
+NAV_msg_map[0x22]="NAV_CLOCK";
+NAV_msg_map[0x31]="NAV_DGPS";
+NAV_msg_map[0x04]="NAV_DOP";
+NAV_msg_map[0x61]="NAV_EOE";
+NAV_msg_map[0x39]="NAV_GEOFENCE";
+NAV_msg_map[0x13]="NAV_HPPOSECEF";
+NAV_msg_map[0x14]="NAV_HPPOSLLH";
+NAV_msg_map[0x09]="NAV_ODO";
+NAV_msg_map[0x34]="NAV_ORB";
+NAV_msg_map[0x01]="NAV_POSECEF";
+NAV_msg_map[0x02]="NAV_POSLLH";
+NAV_msg_map[0x07]="NAV_PVT";
+NAV_msg_map[0x3C]="NAV_RELPOSNED";
+NAV_msg_map[0x10]="NAV_RESETODO";
+NAV_msg_map[0x35]="NAV_SAT";
+NAV_msg_map[0x32]="NAV_SBAS";
+NAV_msg_map[0x06]="NAV_SOL";
+NAV_msg_map[0x03]="NAV_STATUS";
+NAV_msg_map[0x30]="NAV_SVINFO";
+NAV_msg_map[0x3B]="NAV_SVIN";
+NAV_msg_map[0x24]="NAV_TIMEBDS";
+NAV_msg_map[0x25]="NAV_TIMEGAL";
+NAV_msg_map[0x23]="NAV_TIMEGLO";
+NAV_msg_map[0x20]="NAV_TIMEGPS";
+NAV_msg_map[0x26]="NAV_TIMELS";
+NAV_msg_map[0x21]="NAV_TIMEUTC";
+NAV_msg_map[0x11]="NAV_VELECEF";
+NAV_msg_map[0x12]="NAV_VELNED";
+NAV_msg_map[0x43]="NAV_SIG";
+
+std::map<uint8_t, std::string> CFG_msg_map;
+CFG_msg_map[0x13]="CFG_ANT";
+CFG_msg_map[0x93]="CFG_BATCH";
+CFG_msg_map[0x09]="CFG_CFG";
+CFG_msg_map[0x06]="CFG_DAT";
+CFG_msg_map[0x70]="CFG_DGNSS";
+CFG_msg_map[0x61]="CFG_DOSC";
+CFG_msg_map[0x85]="CFG_DYNSEED";
+CFG_msg_map[0x60]="CFG_ESRC";
+CFG_msg_map[0x84]="CFG_FIXSEED";
+CFG_msg_map[0x69]="CFG_GEOFENCE";
+CFG_msg_map[0x3E]="CFG_GNSS";
+CFG_msg_map[0x5C]="CFG_HNR";
+CFG_msg_map[0x02]="CFG_INF";
+CFG_msg_map[0x39]="CFG_ITFM";
+CFG_msg_map[0x47]="FG_LOGFILTER";
+CFG_msg_map[0x01]="CFG_MSG";
+CFG_msg_map[0x24]="CFG_NAV5";
+CFG_msg_map[0x23]="CFG_NAVX5";
+CFG_msg_map[0x17]="CFG_NMEA";
+CFG_msg_map[0x1E]="CFG_ODO";
+CFG_msg_map[0x3B]="CFG_PM2";
+CFG_msg_map[0x86]="CFG_PMS";
+CFG_msg_map[0x00]="CFG_PRT";
+CFG_msg_map[0x57]="CFG_PWR";
+CFG_msg_map[0x08]="CFG_RATE";
+CFG_msg_map[0x34]="CFG_RINV";
+CFG_msg_map[0x04]="CFG_RST";
+CFG_msg_map[0x11]="CFG_RXM";
+CFG_msg_map[0x16]="CFG_SBAS";
+CFG_msg_map[0x62]="CFG_SMGR";
+CFG_msg_map[0x3D]="CFG_TMODE2";
+CFG_msg_map[0x71]="CFG_TMODE3";
+CFG_msg_map[0x31]="CFG_TP5";
+CFG_msg_map[0x53]="CFG_TXSLOT";
+CFG_msg_map[0x1B]="CFG_USB";
+CFG_msg_map[0x8C]="CFG_VALDEL";
+CFG_msg_map[0x8B]="CFG_VALGET";
+CFG_msg_map[0x8A]="CFG_VALSET";
+
+std::map<uint8_t, std::string> AID_msg_map;
+AID_msg_map[0x30]="AID_ALM";
+AID_msg_map[0x33]="AID_AOP";
+AID_msg_map[0x31]="AID_EPH";
+AID_msg_map[0x02]="AID_HUI";
+AID_msg_map[0x01]="AID_INI";
+
+std::map<uint8_t, std::string> INF_msg_map;
+INF_msg_map[0x04]="INF_DEBUG";
+INF_msg_map[0x00]="INF_ERROR";
+INF_msg_map[0x02]="INF_NOTICE";
+INF_msg_map[0x03]="INF_TEST";
+INF_msg_map[0x01]="INF_WARNING";
+
+std::map<uint8_t, std::string> LOG_msg_map;
+LOG_msg_map[0x07]="LOG_CREATE";
+LOG_msg_map[0x03]="LOG_ERASE";
+LOG_msg_map[0x0E]="LOG_FINDTIME";
+LOG_msg_map[0x08]="LOG_INFO";
+LOG_msg_map[0x0f]="LOG_RETRIEVEPOSEXTRA";
+LOG_msg_map[0x0b]="LOG_RETRIEVEPOS";
+LOG_msg_map[0x0d]="LOG_RETRIEVESTRING";
+LOG_msg_map[0x09]="LOG_RETRIEVE";
+LOG_msg_map[0x04]="LOG_STRING";
+
+std::map<uint8_t, std::string> MGA_msg_map;
+MGA_msg_map[0x60]="MGA_ACK";
+MGA_msg_map[0x03]="MGA_BDS";
+MGA_msg_map[0x80]="MGA_DBD";
+MGA_msg_map[0x02]="MGA_GAL";
+MGA_msg_map[0x06]="MGA_GLO";
+MGA_msg_map[0x00]="MGA_GPS";
+MGA_msg_map[0x40]="MGA_INI";
+MGA_msg_map[0x05]="MGA_QZSS";
+
+std::map<uint8_t, std::string> MON_msg_map;
+MON_msg_map[0x36]="MON_COMMS";
+MON_msg_map[0x28]="MON_GNSS";
+MON_msg_map[0x0B]="MON_HW2";
+MON_msg_map[0x37]="MON_HW3";
+MON_msg_map[0x09]="MON_HW";
+MON_msg_map[0x02]="MON_IO";
+MON_msg_map[0x06]="MON_MSGPP";
+MON_msg_map[0x27]="MON_PATCH";
+MON_msg_map[0x38]="MON_RF";
+MON_msg_map[0x07]="MON_RXBUF";
+MON_msg_map[0x21]="MON_RXR";
+MON_msg_map[0x08]="MON_TXBUF";
+MON_msg_map[0x04]="MON_VER";
+
+std::map<uint8_t, std::string> RXM_msg_map;
+RXM_msg_map[0x14]="RXM_MEASX";
+RXM_msg_map[0x41]="RXM_PMREQ";
+RXM_msg_map[0x15]="RXM_RAWX";
+RXM_msg_map[0x59]="RXM_RLM";
+RXM_msg_map[0x32]="RXM_RTCM";
+RXM_msg_map[0x13]="RXM_SFRBX";
+
+std::map<uint8_t, std::string> SEC_msg_map;
+SEC_msg_map[0x03]="SEC_UNIQID";
+
+std::map<uint8_t, std::string> TIM_msg_map;
+TIM_msg_map[0x03]="TIM_TM2";
+TIM_msg_map[0x01]="TIM_TP";
+TIM_msg_map[0x06]="TIM_VRFY";
+
+std::map<uint8_t, std::string>  UPD_msg_map;
+UPD_msg_map[0x14]="UPD_SOS";
+
+UBX_msg_map[0x05]=ACK_msg_map;
+UBX_msg_map[0x06]=CFG_msg_map;
+UBX_msg_map[0x04]=INF_msg_map;
+UBX_msg_map[0x21]=LOG_msg_map;
+UBX_msg_map[0x13]=MGA_msg_map;
+UBX_msg_map[0x0A]=MON_msg_map;
+UBX_msg_map[0x01]=NAV_msg_map;
+UBX_msg_map[0x02]=RXM_msg_map;
+UBX_msg_map[0x27]=SEC_msg_map;
+UBX_msg_map[0x0D]=TIM_msg_map;
+UBX_msg_map[0x09]=UPD_msg_map;
 
 enum {
     FIX_TYPE_NO_FIX = 0x00,

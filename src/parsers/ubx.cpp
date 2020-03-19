@@ -175,6 +175,7 @@ bool UBX::decode_message()
         default:
             DBG("%d\n", message_type_);
             break;
+        DBG(UBX_msg_map[in_message_.buffer[0]][in_message_.buffer[1]]+"\n");
         }
         break;
    case CLASS_CFG: //only needed for getting data
