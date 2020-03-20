@@ -56,6 +56,10 @@ private:
     uint32_t pvt_tow_;
     uint32_t pvt_week_;
     ublox::PosVelEcef ecef_msg_;
+    std::string *local_host;
+    uint16_t* local_port;
+    std::string *rover_host;
+    uint16_t *rover_port;
 };
 
 }
