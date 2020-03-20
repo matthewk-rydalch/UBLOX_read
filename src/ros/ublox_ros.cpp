@@ -81,13 +81,22 @@ UBLOX_ROS::UBLOX_ROS() :
         std::cerr<<"Initializing Base\n";
 
         //Initialize local arrays to contain parameters from xml file
-        std::string* local_host = new std::string[std::max(1, rover_quantity)];
-        uint16_t* local_port = new uint16_t[std::max(1, rover_quantity)];
+        if(rover_quantity>0)
+        {
+            std::string* local_host = new std::string[std::max(1, rover_quantity)];
+            uint16_t* local_port = new uint16_t[std::max(1, rover_quantity)];
 
-        //Initialize rover arrays to contain parameters from xml file
-        std::string* rover_host = new std::string[std::max(1, rover_quantity)];
-        uint16_t* rover_port = new uint16_t[std::max(1, rover_quantity)];
-
+            //Initialize rover arrays to contain parameters from xml file
+            std::string* rover_host = new std::string[std::max(1, rover_quantity)];
+            uint16_t* rover_port = new uint16_t[std::max(1, rover_quantity)];
+        }
+        else
+        {
+            std::string* local_host = NULL;
+            uint16_t* local_port = NULL;
+            std::string* rover_host = NULL;
+            uint16_t* rover_port = NULL;
+        }
         // Get Constallation settings
         uint32_t constellation [6];
         int gps = nh_private_.param<int>("GPS", 1);
