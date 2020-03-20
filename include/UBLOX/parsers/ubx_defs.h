@@ -2,14 +2,19 @@
 
 #include <cstddef>
 #include <cstdint>
+<<<<<<< HEAD
 #include <string>
 #include <map>
 
+=======
+#include <map>
+>>>>>>> master
 namespace ublox
 {
 
 static constexpr size_t BUFFER_SIZE = 1024;
 
+<<<<<<< HEAD
 std::map<uint8_t, std::map<uint8_t, std::string>> UBX_msg_map;
 std::map<uint8_t, std::string> ACK_msg_map;
 ACK_msg_map[0x00]="ACK_NACK";
@@ -168,6 +173,21 @@ UBX_msg_map[0x02]=RXM_msg_map;
 UBX_msg_map[0x27]=SEC_msg_map;
 UBX_msg_map[0x0D]=TIM_msg_map;
 UBX_msg_map[0x09]=UPD_msg_map;
+=======
+/*std::map<uint8_t, std::string> ACK_msg_map;
+std::map<uint8_t, std::string> AID_msg_map;
+std::map<uint8_t, std::string> CFG_msg_map;
+std::map<uint8_t, std::string> INF_msg_map;
+std::map<uint8_t, std::string> LOG_msg_map;
+std::map<uint8_t, std::string> MGA_msg_map;
+std::map<uint8_t, std::string> MON_msg_map;
+std::map<uint8_t, std::string> NAV_msg_map;
+std::map<uint8_t, std::string> RXM_msg_map;
+std::map<uint8_t, std::string> SEC_msg_map;
+std::map<uint8_t, std::string> TIM_msg_map;
+std::map<uint8_t, std::string> UPD_msg_map;
+std::map<uint8_t, std::map<uint8_t, std::string>> UBX_map;*/
+>>>>>>> master
 
 enum {
     FIX_TYPE_NO_FIX = 0x00,

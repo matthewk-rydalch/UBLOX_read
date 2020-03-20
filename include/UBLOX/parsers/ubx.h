@@ -81,6 +81,20 @@ public:
     uint8_t size;
     uint8_t byte = 1;
     uint8_t word = 2;
+    static std::map<uint8_t, std::string> ACK_msg_map;
+    static std::map<uint8_t, std::string> AID_msg_map;
+    static std::map<uint8_t, std::string> CFG_msg_map;
+    static std::map<uint8_t, std::string> INF_msg_map;
+    static std::map<uint8_t, std::string> LOG_msg_map;
+    static std::map<uint8_t, std::string> MGA_msg_map;
+    static std::map<uint8_t, std::string> MON_msg_map;
+    static std::map<uint8_t, std::string> NAV_msg_map;
+    static std::map<uint8_t, std::string> RXM_msg_map;
+    static std::map<uint8_t, std::string> SEC_msg_map;
+    static std::map<uint8_t, std::string> TIM_msg_map;
+    static std::map<uint8_t, std::string> UPD_msg_map;
+    static std::map<uint8_t, std::map<uint8_t, std::string>> UBX_map;
+    
     // local storage
     volatile bool new_data_;
 
