@@ -60,6 +60,8 @@ private:
     uint16_t* local_port;
     std::string *rover_host;
     uint16_t *rover_port;
+    std::string *base_host;
+    uint16_t *base_port;
 };
 
 }

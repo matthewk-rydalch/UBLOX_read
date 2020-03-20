@@ -80,6 +80,9 @@ UBLOX_ROS::UBLOX_ROS() :
     if (chain_level == ublox::UBLOX::BASE){
         std::cerr<<"Initializing Base\n";
 
+        base_host=NULL;
+        base_port=NULL;
+
         //Initialize local arrays to contain parameters from xml file
         if(rover_quantity>0)
         {
@@ -152,6 +155,9 @@ UBLOX_ROS::UBLOX_ROS() :
         //Initialize base arrays to contain parameters from xml file
         std::string* base_host = new std::string[1];
         uint16_t* base_port = new uint16_t[1];
+
+        rover_host = NULL;
+        rover_port = NULL;
 
         // Get Constallation settings
         uint32_t constellation [4];
@@ -271,6 +277,19 @@ UBLOX_ROS::~UBLOX_ROS()
 {
     if (ublox_)
         delete ublox_;
+    if (local_host!=NULL)
+        delete local_host;
+    if (local_port!=NULL)
+        delete local_port;
+    if (rover_host!=NULL)
+        delete rover_host;
+    if (rover_port!=NULL)
+        delete rover_port;
+    if (base_host!=NULL)
+        delete base_host;
+    if (base_port!=NULL)
+        delete base_port;
+    
 }
 
 void UBLOX_ROS::pvtCB(const ublox::NAV_PVT_t& msg)

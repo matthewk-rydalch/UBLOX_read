@@ -166,14 +166,14 @@ bool UBX::decode_message()
         {
         case ACK_ACK:
             got_ack_ = true;
-            DBG("ACK\n");
+            DBG("ACK: ");
             break;
         case ACK_NACK:
             got_nack_ = true;
-            DBG("NACK\n");
+            DBG("NACK: ");
             break;
         default:
-            DBG("%d\n", message_type_);
+            DBG("%d: ", message_type_);
             break;
         }
         DBG((UBX_map[in_message_.buffer[0]][in_message_.buffer[1]]+"\n").c_str());
