@@ -183,7 +183,7 @@ bool UBX::decode_message()
             DBG("NACK: ");
             break;
         default:
-            DBG("%d\n", message_type_);
+            DBG("%d: ", message_type_);
             break;
         }
         DBG((UBX_map[in_message_.ACK_ACK.clsID][in_message_.ACK_ACK.msgID]+"\n").c_str());

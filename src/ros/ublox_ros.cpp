@@ -85,14 +85,26 @@ UBLOX_ROS::UBLOX_ROS() :
     if (chain_level == ublox::UBLOX::BASE){
         std::cerr<<"Initializing Base\n";
 
+        base_host=NULL;
+        base_port=NULL;
+
         //Initialize local arrays to contain parameters from xml file
-        std::string* local_host = new std::string[std::max(1, rover_quantity)];
-        uint16_t* local_port = new uint16_t[std::max(1, rover_quantity)];
+        if(rover_quantity>0)
+        {
+            local_host = new std::string[rover_quantity];
+            local_port = new uint16_t[rover_quantity];
 
-        //Initialize rover arrays to contain parameters from xml file
-        std::string* rover_host = new std::string[std::max(1, rover_quantity)];
-        uint16_t* rover_port = new uint16_t[std::max(1, rover_quantity)];
-
+            //Initialize rover arrays to contain parameters from xml file
+            rover_host = new std::string[rover_quantity];
+            rover_port = new uint16_t[rover_quantity];
+        }
+        else
+        {
+            local_host = NULL;
+            local_port = NULL;
+            rover_host = NULL;
+            rover_port = NULL;
+        }
         // Get Constallation settings
         uint32_t constellation [6];
         int gps = nh_private_.param<int>("GPS", 1); //GPS
@@ -155,6 +167,9 @@ UBLOX_ROS::UBLOX_ROS() :
         //Initialize base arrays to contain parameters from xml file
         std::string* base_host = new std::string[1];
         uint16_t* base_port = new uint16_t[1];
+
+        rover_host = NULL;
+        rover_port = NULL;
 
         // Get Constallation settings
         uint32_t constellation [4];
@@ -301,6 +316,19 @@ UBLOX_ROS::~UBLOX_ROS()
 {
     if (ublox_)
         delete ublox_;
+    if (local_host!=NULL)
+        delete local_host;
+    if (local_port!=NULL)
+        delete local_port;
+    if (rover_host!=NULL)
+        delete rover_host;
+    if (rover_port!=NULL)
+        delete rover_port;
+    if (base_host!=NULL)
+        delete base_host;
+    if (base_port!=NULL)
+        delete base_port;
+    
 }
 
 // Callback function for subscriber to RelPos for a given RelPos message.

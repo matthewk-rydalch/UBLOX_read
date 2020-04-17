@@ -4,8 +4,8 @@
 		<node name="f9p" pkg="ublox" type="ublox_ros">
 			<param name="serial_port" value="/dev/ttyACM0"/>
 			<param name="chain_level" value="0"/>
-			<param name="base_type" value = "moving"/>  <!--moving or stationary-->
-			<param name="rover_quantity" value = "0"/>     <!--number of rovers-->
+			<param name="base_type" value = "stationary"/>  <!--moving or stationary-->
+			<param name="rover_quantity" value = "0"/>
 		</node>
 	</group>
 </launch>
