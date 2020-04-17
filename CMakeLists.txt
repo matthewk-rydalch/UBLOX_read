@@ -2,14 +2,20 @@ cmake_minimum_required(VERSION 2.8.3)
 project(ublox)
 
 set(CMAKE_CXX_FLAGS "-std=c++17")
+set(Boost_DEBUG ON)
+set(Boost_DETAILED_FAILURE_MSG ON)
 
 find_package(Eigen3 REQUIRED)
 find_package(async_comm QUIET)
+#find_package(Boost)
 if (NOT ${async_comm_FOUND})
 	add_subdirectory(lib/async_comm)
 	set(async_comm_LIBRARIES async_comm)
 	set(async_comm_INCLUDE_DIRS lib/async_comm/include)
 endif()
+
+
+message("async_comm_INCLUDE_DIRS: ${async_comm_INCLUDE_DIRS}\n")
 
 add_library(UBLOX
     src/ublox.cpp
@@ -18,6 +24,8 @@ add_library(UBLOX
     src/parsers/nav.cpp
     src/utctime.cpp
 )
+
+message("UBLOX Boost include dirs: ${Boost_INCLUDE_DIRS}")
 target_link_libraries(UBLOX ${async_comm_LIBRARIES} ${gnss_utils_LIBRARIES})
 target_include_directories(UBLOX PUBLIC include ${async_comm_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIRS})
 
@@ -65,13 +73,19 @@ if (${BUILD_ROS})
 		GlonassEphemeris.msg
 		Observation.msg
 		ObsVec.msg)
+	
+	add_service_files(
+		DIRECTORY srv
+		FILES
+		CfgValGet.srv)
+		
 	generate_messages(
   		DEPENDENCIES
   		std_msgs)
 	catkin_package(
 		LIBRARIES UBLOX
 		INCLUDE_DIRS include
-  		CATKIN_DEPENDS std_msgs
+  		CATKIN_DEPENDS std_msgs message_runtime
 	)
 
 	add_executable(ublox_ros src/ros/ublox_ros.cpp)

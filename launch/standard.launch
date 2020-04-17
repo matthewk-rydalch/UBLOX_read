@@ -7,6 +7,5 @@
 			<param name="base_type" value = "stationary"/>  <!--moving or stationary-->
 			<param name="rover_quantity" value = "0"/>
 		</node>
-		<!--node pkg="rosbag" type="record" name="record" output="screen" args="-O /home/matt/data/devel/onerover/rover.bag -a"/-->
 	</group>
 </launch>

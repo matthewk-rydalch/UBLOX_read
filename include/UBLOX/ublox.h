@@ -28,6 +28,7 @@ public:
         BROVER = 0b01,  // 1
         RTK = 0b10,
     } rtk_type_t;
+    const double PI = 3.14159265358979323846264338327950288419716939937510582097494459230781640628620;
 
     UBLOX(const std::string& port);
     ~UBLOX();
@@ -118,6 +119,10 @@ public:
     void config_base_moving(int on_off, int gps, int glonas, int beidou,
                       int galileo);
     void poll_value();
+
+    void vector_math(double ned_1[], double ned_2[], double answer[]);
+
+    CFG_VALGET_t cfgValGet(const CFG_VALGET_t &request);
 
     uint8_t byte = 1;
     uint8_t word = 2;

@@ -143,6 +143,11 @@ bool UBX::read_cb(uint8_t byte)
     return false;
 }
 
+/*  decode_message()
+    Called by read_cb
+    Returns true if the checksum is successful. Otherwise returns false.
+
+*/
 bool UBX::decode_message()
 {
     // First, check the checksum
@@ -195,6 +200,7 @@ bool UBX::decode_message()
        }
 
     default:
+        // DBG((UBX_map[message_class_][message_type_]+"\n").c_str());
         break;
     }
 
@@ -243,6 +249,9 @@ void UBX::calculate_checksum(const uint8_t msg_cls, const uint8_t msg_id, const 
     }
 }
 
+// Sending messages to the f9p
+// These messages are either CFG_VALSET, CFG_VALGET, or CFG_VALDEL
+// Returns true if successfully send the message to the f9p module
 bool UBX::send_message(uint8_t msg_class, uint8_t msg_id, UBX_message_t& message, uint16_t len)
 {
     // First, calculate the checksum
@@ -273,6 +282,9 @@ void UBX::set_nav_rate(uint16_t period_ms)
 
 }
 
+/*
+Configures settings for the f9p module
+*/
 void UBX::configure(uint8_t version, uint8_t layer, uint64_t cfgData, uint32_t cfgDataKey, uint8_t size)
 {
     memset(&out_message_, 0, sizeof(CFG_VALSET_t));
@@ -288,6 +300,7 @@ void UBX::configure(uint8_t version, uint8_t layer, uint64_t cfgData, uint32_t c
     }
     out_message_.CFG_VALSET.cfgDataKey = cfgDataKey;
     send_message(CLASS_CFG, CFG_VALSET, out_message_, sizeof(CFG_VALSET_t));
+    std::cerr<<"Configured "<< cfgDataKey<<" to "<<cfgData<<std::endl;
 }
 
 void UBX::get_configuration(uint8_t version, uint8_t layer, uint32_t cfgDataKey)
@@ -297,6 +310,7 @@ void UBX::get_configuration(uint8_t version, uint8_t layer, uint32_t cfgDataKey)
        out_message_.CFG_VALGET.layer = layer;
        out_message_.CFG_VALGET.cfgDataKey = cfgDataKey;
        send_message(CLASS_CFG, CFG_VALGET, out_message_, sizeof(CFG_VALGET_t));
+    //    std::cerr<<"Got configuration of "<<cfgDataKey<<" to "<<cfgData<<std::endl;
 }
 
 //Deletes configuration values specified by the key
@@ -307,6 +321,7 @@ void UBX::del_configuration(uint8_t version, uint8_t layer, uint32_t cfgDataKey)
     out_message_.CFG_VALDEL.layer = layer;
     out_message_.CFG_VALDEL.cfgDataKey = cfgDataKey;
     send_message(CLASS_CFG, CFG_VALDEL, out_message_, sizeof(CFG_VALDEL_t));
+    std::cerr<<"Deleted configuration of "<<cfgDataKey<<std::endl;
 }
 std::map<uint8_t, std::string> UBX::ACK_msg_map =
 {

@@ -10,6 +10,9 @@ float64[3] accNED 		# Accuracy of relative position North component (m)
 float64 accLength 		# Accuracy of Length of the relative position vector (m)
 uint32 accHeading 		# Accuracy of heading of the relative position vector (rad)
 uint32 flags 			# See enums below
+float64[3] arrowNED  # Difference vector from one rover to the other. (m)
+float64 arrowLength #Length of difference vector. (m)
+float64[3] arrowRPY #Roll/Pitch/Yaw from rover1 to rover2 (rad)
 
 uint32 FLAGS_GNSS_FIX_OK =            1
 uint32 FLAGS_DIFF_SOLN =              2

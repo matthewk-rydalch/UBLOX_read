@@ -56,6 +56,9 @@ UBLOX_ROS::UBLOX_ROS() :
     // nav_sat_fix_pub_ = nh_.advertise<sensor_msgs::NavSatFix>("NavSatFix");
     // nav_sat_status_pub_ = nh_.advertise<sensor_msgs::NavSatStatus>("NavSatStatus");
 
+    // Connect ROS services
+    cfg_val_get = nh_.advertiseService("CfgValGet", &UBLOX_ROS::cfgValGet, this);
+
     //Get the serial port
     std::string serial_port = nh_private_.param<std::string>("serial_port", "/dev/ttyACM0");
 
@@ -102,32 +105,39 @@ UBLOX_ROS::UBLOX_ROS() :
         }
         // Get Constallation settings
         uint32_t constellation [6];
-        int gps = nh_private_.param<int>("GPS", 1);
-        int glonas = nh_private_.param<int>("GLONAS", 0);
-        int beidou = nh_private_.param<int>("BEIDOU", 0);
-        int galileo = nh_private_.param<int>("GALILEO", 1);
-        int surveytime = nh_private_.param<int>("Surveytime", 120);
-        int surveyacc = nh_private_.param<int>("Surveyacc", 500000);
+        int gps = nh_private_.param<int>("GPS", 1); //GPS
+        int glonas = nh_private_.param<int>("GLONAS", 0); //GLONAS
+        int beidou = nh_private_.param<int>("BEIDOU", 0); //BEIDOU
+        int galileo = nh_private_.param<int>("GALILEO", 1); //GALILEO
+        int surveytime = nh_private_.param<int>("Surveytime", 120); //Stationary base survey time
+        int surveyacc = nh_private_.param<int>("Surveyacc", 500000);  //Stationary base accuracy
 
         //Account for the case when no numbers are used for the first rover.
         int j = 0;
         if(nh_private_.hasParam("local_host")) {
-
+            //The first local host corresponds to the first rover.
             local_host[0] = nh_private_.param<std::string>("local_host", "localhost");
             local_port[0] = nh_private_.param<int>("local_port", 16140);
+            //First rover.
             rover_host[0] = nh_private_.param<std::string>("rover_host", "localhost");
             rover_port[0] = nh_private_.param<int>("rover_port", 16145);
+
+            //Let the program know that we have inputted the first rover.
             j=1;
         }
 
-        //Input parameters from xml file into respective arrays
+        //Input parameters from xml file into respective arrays for rovers.
         for(int i=1+j; i <= rover_quantity; i++) {
             local_host[i-1] = nh_private_.param<std::string>("local_host"+std::to_string(i), "localhost");
             local_port[i-1] = nh_private_.param<int>("local_port"+std::to_string(i), 16140);
             rover_host[i-1] = nh_private_.param<std::string>("rover_host"+std::to_string(i), "localhost");
             rover_port[i-1] = nh_private_.param<int>("rover_port"+std::to_string(i), 16145);
         }
+
+        //Output the chain level we are at.
         std::cerr<<"Chain Level: " << chain_level << "\n";
+
+        //Return outputs for all local hosts and rovers hooked up.
         for(int i = 0; i < rover_quantity; i++) {
             std::cerr<<"local_host " + std::to_string(i+1) + ": " << local_host[i] << "\n";
             std::cerr<<"local_port " + std::to_string(i+1) + ": " << local_port[i] << "\n";
@@ -238,8 +248,13 @@ UBLOX_ROS::UBLOX_ROS() :
         local_host[j] = nh_private_.param<std::string>("local_host"+std::to_string(j+1), "localhost");
         local_port[j] = nh_private_.param<int>("local_port"+std::to_string(j+1), 16140);
 
+        // Output chain level
         std::cerr<<"Chain Level: " << chain_level << "\n";
+
+        // Output base host
         std::cerr<<"Base Host: "<<base_host[0]<<"\n";
+
+        // Output base port
         std::cerr<<"Base Port: "<<base_port[0]<<"\n";
         for(int i = 0; i < rover_quantity; i++) {
             std::cerr<<"local_host " + std::to_string(i+1) + ": " << local_host[i] << "\n";
@@ -251,10 +266,32 @@ UBLOX_ROS::UBLOX_ROS() :
 
         //Determine whether the base is moving or stationary
         std::string base_type = "moving";
+
+        // Initiate the Brover
         ublox_->initBrover(local_host, local_port, base_host, base_port,
            rover_host, rover_port, base_type, rover_quantity, gps,
             glonas, beidou, galileo);
 
+    }
+
+    // Check if there is a arrow
+    if (nh_private_.hasParam("arrowbase") && nh_private_.hasParam("arrowtip")) {
+
+      // If there is an arrow , then we need to subscribe to the base
+      std::string arrowbase = nh_private_.param<std::string>("arrowbase", "/brover");
+      // and tip of the arrow for /RelPos
+      std::string arrowtip = nh_private_.param<std::string>("arrowtip", "/rover");
+
+      // Call the first subscriber
+      sub1 = nh_.subscribe(arrowbase+"/RelPos", 10, &UBLOX_ROS::cb_rov1, this);
+
+      // Call the second subscriber
+      sub2 = nh_.subscribe(arrowtip+"/RelPos", 10, &UBLOX_ROS::cb_rov2, this);
+
+      // Make the arrow flag true. This flag is used in the relposCB function in
+      // in order to determine if the vector math function needs to be called or
+      // not.
+      arrow_flag = true;
     }
 
     // connect callbacks
@@ -290,6 +327,24 @@ UBLOX_ROS::~UBLOX_ROS()
     if (base_port!=NULL)
         delete base_port;
     
+}
+
+// Callback function for subscriber to RelPos for a given RelPos message.
+// NOTE: This message is not the same as ublox::NAV_RELPOSNED_t, since that one
+// deals with messages from the f9p
+void UBLOX_ROS::cb_rov1(const ublox::RelPos &msg) {
+    ned_1[0] = msg.relPosNED[0];  //North
+    ned_1[1] = msg.relPosNED[1];  //East
+    ned_1[2] = msg.relPosNED[2];  //Down
+}
+
+// Callback function for subscriber to second RelPos.
+// NOTE: This message is not the same as ublox::NAV_RELPOSNED_t, since that one
+// deals with messages from the f9p
+void UBLOX_ROS::cb_rov2(const ublox::RelPos &msg) {
+    ned_2[0] = msg.relPosNED[0];  //North
+    ned_2[1] = msg.relPosNED[1];  //East
+    ned_2[2] = msg.relPosNED[2];  //Down
 }
 
 void UBLOX_ROS::pvtCB(const ublox::NAV_PVT_t& msg)
@@ -343,7 +398,10 @@ void UBLOX_ROS::pvtCB(const ublox::NAV_PVT_t& msg)
 
 void UBLOX_ROS::relposCB(const ublox::NAV_RELPOSNED_t& msg)
 {
+    // Create the message to be outputted
     ublox::RelPos out;
+
+
     // out.iTOW = msg.iTow*1e-3;
     out.header.stamp = ros::Time::now(); /// TODO: do this right
     out.refStationId = msg.refStationId;
@@ -362,6 +420,23 @@ void UBLOX_ROS::relposCB(const ublox::NAV_RELPOSNED_t& msg)
     out.accLength = msg.accLength*1e-3*.1;
     out.accHeading = deg2rad(msg.accHeading*1e-5);
     out.flags = msg.flags;
+
+    if (arrow_flag == true) {
+
+    // Perform vector_math and assign values to arrow. (see ublox_ros.h for
+    // variable declarations)
+    ublox_->vector_math(ned_1, ned_2, arrow);
+
+    // Assign all the values
+    out.arrowNED[0] = arrow[0];
+    out.arrowNED[1] = arrow[1];
+    out.arrowNED[2] = arrow[2];
+    out.arrowLength = arrow[3];
+    out.arrowRPY[0] = arrow[4];
+    out.arrowRPY[1] = arrow[5];
+    out.arrowRPY[2] = arrow[6];
+  }
+    // Publish the RelPos ROS message
     relpos_pub_.publish(out);
 }
 
@@ -452,7 +527,7 @@ void UBLOX_ROS::obsCB(const ublox::RXM_RAWX_t &msg)
 //        case ublox::Observation::BEIDOU_B2I_D2:
 //            out.obs[i].freq = Ephemeris::BEIDOU_FREQ_B2;
 //            break;
-        default:
+        default:      // and tip of the arrow for /RelPos
             out.obs[i].freq = 0;
             break;
         }
@@ -566,7 +641,25 @@ void UBLOX_ROS::gephCB(const GlonassEphemeris &eph)
     geph_pub_.publish(out);
 }
 
+bool UBLOX_ROS::cfgValGet(ublox::CfgValGet::Request &req, ublox::CfgValGet::Response &res)
+{
+    ublox::CFG_VALGET_t request;
+    request.version=req.version;
+    request.layer=req.layer;
+    request.position=req.position;
+    request.cfgDataKey=req.keys;
+
+    ublox::CFG_VALGET_t response = ublox_->cfgValGet(request);
+    
+    res.version=response.version;
+    res.layer=response.layer;
+    res.position=response.position;
+    res.cfgData.push_back(response.cfgData);
+    return true;
 }
+
+}
+
 
 
 int main(int argc, char** argv)

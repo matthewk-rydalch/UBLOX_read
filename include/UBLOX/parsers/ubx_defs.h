@@ -360,7 +360,7 @@ typedef struct {
 
     uint8_t version; //0 poll request, 1 poll (receiver to return config data key and value pairs)
     uint8_t layer;
-    uint8_t reserved1[2];
+    uint16_t position;
     uint32_t cfgDataKey;
     uint64_t cfgData;
 }__attribute__((packed)) CFG_VALGET_t;
@@ -673,6 +673,10 @@ typedef struct  {
     uint16_t magAcc; // 1e-2 deg Magnetic declination accuracy
 }__attribute__((packed)) NAV_PVT_t;
 
+
+
+
+// NAV_RELPOSNED_t
 typedef struct  {
     enum {
         FLAGS_gnssFixOK =           0b000000001,
@@ -708,6 +712,8 @@ typedef struct  {
     uint32_t flags; //See graphic in Interface Description pg 158
 
 }__attribute__((packed)) NAV_RELPOSNED_t;
+
+
 
 typedef struct  {
 

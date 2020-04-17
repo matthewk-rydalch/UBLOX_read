@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<launch>
+
+	<group ns="base">
+
+		<node name="f9p" pkg="ublox" type="ublox_ros">
+			<param name="chain_level" value="0"/>
+			<param name="serial_port" value="/dev/ttyACM0"/>
+			<param name="base_type" value="stationary"/>
+			<param name="rover_quantity" value="0"/>
+			<param name="local_host" value="localhost"/>
+			<param name="local_port" value="16140"/>
+                        <param name="rover_quantity" value = "0"/>
+		</node>
+	</group>
+</launch>
