@@ -226,6 +226,12 @@ void UBLOX::initBase(std::string local_host[], uint16_t local_port[],
     if(rover_quantity>0)
         udparray_ = new async_comm::UDP*[rover_quantity];
 
+    else
+    {
+            udparray_=NULL;
+    }
+    
+
     //Fill udp objects into the array.
     for(int i = 0; i < rover_quantity; i++) {
         std::cerr<<"Initializing Base to Rover "<<std::to_string(i+1)<<" UDP\n";

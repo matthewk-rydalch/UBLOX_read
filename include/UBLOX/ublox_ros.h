@@ -70,8 +70,12 @@ private:
     ros::Subscriber sub2;
 
     ublox::PosVelEcef ecef_msg_;
-    void cb_rov1(const ublox::RelPos &msg);
-    void cb_rov2(const ublox::RelPos &msg);
+    std::string *local_host;
+    uint16_t* local_port;
+    std::string *rover_host;
+    uint16_t *rover_port;
+    std::string *base_host;
+    uint16_t *base_port;
 };
 
 }
