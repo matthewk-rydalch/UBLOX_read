@@ -1,0 +1,13 @@
+uint8 layer
+uint16 position
+uint32 key
+----
+uint8 version
+uint8 layer
+uint16 position
+uint32 key
+uint64 value
+bool ack
+bool nack
+bool gotcfg
+uint8 flags

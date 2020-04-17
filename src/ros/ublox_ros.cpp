@@ -58,6 +58,8 @@ UBLOX_ROS::UBLOX_ROS() :
 
     // Connect ROS services
     cfg_val_get = nh_.advertiseService("CfgValGet", &UBLOX_ROS::cfgValGet, this);
+    cfg_val_del_ = nh_.advertiseService("CfgValDel", &UBLOX_ROS::cfgValDel, this);
+    cfg_val_set_ = nh_.advertiseService("CfgValSet", &UBLOX_ROS::cfgValSet, this);
 
     //Get the serial port
     std::string serial_port = nh_private_.param<std::string>("serial_port", "/dev/ttyACM0");
@@ -644,17 +646,46 @@ void UBLOX_ROS::gephCB(const GlonassEphemeris &eph)
 bool UBLOX_ROS::cfgValGet(ublox::CfgValGet::Request &req, ublox::CfgValGet::Response &res)
 {
     ublox::CFG_VALGET_t request;
-    request.version=req.version;
+    request.version=0;
     request.layer=req.layer;
     request.position=req.position;
-    request.cfgDataKey=req.keys;
+    request.cfgDataKey=req.key;
 
-    ublox::CFG_VALGET_t response = ublox_->cfgValGet(request);
+    ublox::CFG_VALGET_TUPLE_t response = ublox_->cfgValGet(request);
     
-    res.version=response.version;
-    res.layer=response.layer;
-    res.position=response.position;
-    res.cfgData.push_back(response.cfgData);
+    res.version=std::get<1>(response).version;
+    res.layer=std::get<1>(response).layer;
+    res.position=std::get<1>(response).position;
+    res.key=std::get<1>(response).cfgDataKey;
+    res.value=std::get<1>(response).cfgData;
+    res.ack=std::get<0>(response).got_ack;
+    res.nack=std::get<0>(response).got_nack;
+    res.gotcfg=std::get<0>(response).got_cfg_val;
+    res.flags=std::get<0>(response).flags;
+
+    return true;
+}
+
+bool UBLOX_ROS::cfgValDel(ublox::CfgValDel::Request &req, ublox::CfgValDel::Response &res)
+{
+
+    ublox::CFG_VAL_DBG_t response = ublox_->cfgValDel(0, req.layer, req.key);
+
+    res.got_Ack = response.got_ack;
+    res.got_Nack = response.got_nack;
+
+    return true;
+}
+
+
+
+bool UBLOX_ROS::cfgValSet(ublox::CfgValSet::Request &req, ublox::CfgValSet::Response &res)
+{
+    ublox::CFG_VAL_DBG_t response = ublox_->cfgValSet(0, req.layer, req.cfgData, req.key, req.size);
+
+    res.got_Ack = response.got_ack;
+    res.got_Nack = response.got_nack;
+
     return true;
 }
 

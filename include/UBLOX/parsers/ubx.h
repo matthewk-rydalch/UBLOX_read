@@ -3,22 +3,26 @@
 
 #include <stdint.h>
 #include <iostream>
+#include <ctime>
 
 #include "async_comm/serial.h"
 #include "UBLOX/parsers/ubx_defs.h"
 
 namespace ublox
 {
+    typedef boost::bimaps::bimap<std::string, uint32_t> bimap_type;
+    typedef bimap_type::value_type value_type;
 
 class UBX
 {
 public:
 
     UBX(async_comm::Serial& ser);
+    void fill_cfg_map();
 
-    void configure(uint8_t version, uint8_t layer, uint64_t cfgData, uint32_t cfgDataKey, uint8_t size);
-    void get_configuration(uint8_t version, uint8_t layer, uint32_t cfgDataKey);
-    void del_configuration(uint8_t version, uint8_t layer, uint32_t cfgDataKey);
+    CFG_VAL_DBG_t configure(uint8_t version, uint8_t layer, uint64_t cfgData, uint32_t cfgDataKey, uint8_t size);
+    CFG_VALGET_TUPLE_t get_configuration(uint8_t version, uint8_t layer, uint32_t cfgDataKey);
+    CFG_VAL_DBG_t del_configuration(uint8_t version, uint8_t layer, uint32_t cfgDataKey);
 
     // This function returns true when a new message has been parsed
     bool read_cb(uint8_t byte);
@@ -59,13 +63,21 @@ public:
                             const uint16_t len, const UBX_message_t payload,
                             uint8_t &ck_a, uint8_t &ck_b) const;
 
+    // Translation function prior to cfgval functions
+    uint32_t translate(std::string key);
+
+    inline double time_elapsed(clock_t start)
+    {
+        return ((float)(clock()-start))/CLOCKS_PER_SEC;
+    }
+
     // Parsing State Working Memory
     uint8_t prev_byte_;
     uint16_t buffer_head_ = 0;
+    CFG_VAL_DBG_t cfgval_dbg_;
     bool start_message_ = false;
     bool end_message_ = false;
-    bool got_ack_ = false;
-    bool got_nack_ = false;
+    CFG_VALGET_t cfg_val_get;
     parse_state_t parse_state_;
     uint8_t message_class_;
     uint8_t message_type_;
@@ -81,6 +93,7 @@ public:
     uint8_t size;
     uint8_t byte = 1;
     uint8_t word = 2;
+
     static std::map<uint8_t, std::string> ACK_msg_map;
     static std::map<uint8_t, std::string> AID_msg_map;
     static std::map<uint8_t, std::string> CFG_msg_map;
@@ -93,7 +106,10 @@ public:
     static std::map<uint8_t, std::string> SEC_msg_map;
     static std::map<uint8_t, std::string> TIM_msg_map;
     static std::map<uint8_t, std::string> UPD_msg_map;
+
     static std::map<uint8_t, std::map<uint8_t, std::string>> UBX_map;
+
+    bimap_type UBX_cfg_map;
     
     // local storage
     volatile bool new_data_;

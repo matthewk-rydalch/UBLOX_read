@@ -1,0 +1,7 @@
+uint8 layer
+uint32 key
+uint64 cfgData
+uint8 size
+---
+bool got_Ack
+bool got_Nack

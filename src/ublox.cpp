@@ -45,7 +45,7 @@ void UBLOX::config_f9p() //See ubx_defs.h for more information
     ubx_.configure(CFG_VALSET_t::VERSION_0, CFG_VALSET_t::RAM, 0, CFG_VALSET_t::USB_INPROT_NMEA, byte); //Flag to indicate if NMEA should be an input protocol on USB
     ubx_.configure(CFG_VALSET_t::VERSION_0, CFG_VALSET_t::RAM, 0, CFG_VALSET_t::USB_OUTPROT_NMEA, byte); //Flag to indicate if NMEA should be an output protocol on USB
 
-    bool poll = false;
+    bool poll = true;
     if(poll == true)
         poll_value();
 }
@@ -434,14 +434,22 @@ void UBLOX::rtcm_complete_cb(const uint8_t *buf, size_t size)
 
   } // End function vector_math
 
-  CFG_VALGET_t UBLOX::cfgValGet(const CFG_VALGET_t &request)
-  {
-      CFG_VALGET_t response;
-      response.version=0x01;
-      response.layer=request.layer;
-      response.position=request.position;
-      response.cfgData=0x01;
 
-      return response;
+  CFG_VALGET_TUPLE_t UBLOX::cfgValGet(const CFG_VALGET_t &request)
+  {
+      
+      return ubx_.get_configuration(request.version, request.layer, request.cfgDataKey);
+  }
+
+  CFG_VAL_DBG_t UBLOX::cfgValDel(uint8_t version, uint8_t layer, uint32_t cfgDataKey)
+  {
+
+      return ubx_.del_configuration(version, layer, cfgDataKey);
+  }
+
+  CFG_VAL_DBG_t UBLOX::cfgValSet(uint8_t version, uint8_t layer, uint64_t cfgData, uint32_t cfgDataKey, uint8_t size)
+  {
+
+      return ubx_.configure(version, layer, cfgData, cfgDataKey, size);
   }
 }

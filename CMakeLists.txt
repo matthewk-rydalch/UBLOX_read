@@ -19,6 +19,7 @@ message("async_comm_INCLUDE_DIRS: ${async_comm_INCLUDE_DIRS}\n")
 
 add_library(UBLOX
     src/ublox.cpp
+	src/parsers/ubx_maps.cpp
     src/parsers/ubx.cpp
     src/parsers/rtcm.cpp
     src/parsers/nav.cpp
@@ -77,7 +78,9 @@ if (${BUILD_ROS})
 	add_service_files(
 		DIRECTORY srv
 		FILES
-		CfgValGet.srv)
+		CfgValGet.srv
+		CfgValDel.srv
+		CfgValSet.srv)
 		
 	generate_messages(
   		DEPENDENCIES

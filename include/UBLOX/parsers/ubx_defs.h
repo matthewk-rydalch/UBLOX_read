@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <map>
+#include <boost/bimap.hpp>
 namespace ublox
 {
 
@@ -365,6 +366,18 @@ typedef struct {
     uint64_t cfgData;
 }__attribute__((packed)) CFG_VALGET_t;
 
+typedef union {
+    struct {
+    uint8_t invalid_map_val   : 1;
+    uint8_t got_nack            : 1;
+    uint8_t got_ack             : 1;
+    uint8_t got_cfg_val       : 1;
+    };
+    uint8_t flags;
+}__attribute__((packed)) CFG_VAL_DBG_t;
+
+typedef std::tuple<CFG_VAL_DBG_t, CFG_VALGET_t> CFG_VALGET_TUPLE_t;
+
 typedef struct {
     enum {
         RAM = 0b00000001,
@@ -596,12 +609,6 @@ typedef struct
     uint8_t reserved1[2];
     uint32_t cfgDataKey;
 
-    union
-    {
-        uint8_t bytes[4];
-        uint16_t half_word[2];
-        uint32_t word;
-    } cfgData;
 }__attribute__((packed)) CFG_VALDEL_t;
 
 typedef struct {
